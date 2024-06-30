@@ -3,22 +3,15 @@ from tkinter import scrolledtext, messagebox, simpledialog, Listbox, Menu
 import socket
 import threading
 import configparser
-from plyer import notification
-import pygame
 
 # Глобальные переменные
 CONFIG_FILE = 'servers.ini'
 USER_FILE = 'user.ini'
-NOTIFICATION_ICON = 'icon.png'  # Укажите путь к вашей иконке
-SOUND_FILE = 'sound.mp3'  # Укажите путь к вашему звуковому файлу
 
 class ClientGUI:
     def __init__(self, root):
         self.root = root
-        self.root.title("Webkm Messenger")
-
-        # Инициализация звука
-        pygame.mixer.init()
+        self.root.title("Простой мессенджер")
 
         # Список серверов
         self.servers = self.load_servers()
@@ -155,32 +148,9 @@ class ClientGUI:
                 self.message_display.insert(tk.END, f"{message}\n")
                 self.message_display.config(state=tk.DISABLED)
                 self.message_display.see(tk.END)  # Прокрутка до конца
-                
-                # Воспроизведение звука и отображение уведомления
-                self.play_sound()
-                self.show_notification(message)
-
             except Exception as e:
                 print(f"[-] Error receiving message: {str(e)}")
                 break
-
-    def play_sound(self):
-        """
-        Воспроизведение звука уведомления
-        """
-        pygame.mixer.music.load(SOUND_FILE)
-        pygame.mixer.music.play()
-
-    def show_notification(self, message):
-        """
-        Отображение уведомления в Windows
-        """
-        notification.notify(
-            title='Новое сообщение в Webkm Messenger',
-            message=message,
-            app_icon=NOTIFICATION_ICON,  # Комментарий: иконка уведомления
-            timeout=10  # Уведомление исчезает через 10 секунд
-        )
 
     def clear_window(self):
         for widget in self.root.winfo_children():
